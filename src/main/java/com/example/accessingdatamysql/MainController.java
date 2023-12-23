@@ -82,6 +82,11 @@ public class MainController {
         return testList;
     }
 
+    @GetMapping("/getTestById")
+    public @ResponseBody Test getTestById(@RequestParam int testId) {
+        return testRepository.findById(testId).orElse(null);
+    }
+
     @PutMapping(path="/updateTestById")
     public @ResponseBody String updateTestUser (
             @RequestParam int userId,

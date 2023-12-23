@@ -52,6 +52,10 @@ public class Test {
         this.isAllowedNewAttempt = value;
     }
 
+//    public AbstractMap.SimpleEntry<String, String> getTest() {
+//
+//    }
+
     public AbstractMap.SimpleEntry<String, Integer> getInfo() {
         return new AbstractMap.SimpleEntry<>(title, id);
     }
