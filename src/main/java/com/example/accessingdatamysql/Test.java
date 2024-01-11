@@ -90,6 +90,14 @@ public class Test {
         return new ShortStatistic(usersId.size(), (double) sumResults / usersId.size());
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
     public boolean isCorrectID(int attemptId) {
         return id == attemptId;
     }

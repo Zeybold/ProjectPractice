@@ -6,8 +6,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-@Controller
+@Controller //RestController
 @RequestMapping(path="/demo")
+@CrossOrigin("*")
 public class MainController {
 
     public final String SUCCESS_SAVE = "Saved!";
@@ -20,20 +21,28 @@ public class MainController {
     @Autowired
     private TestRepository testRepository;
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping(path="/addNewUser")
-    public @ResponseBody String addNewUser (
+    public @ResponseBody Map.Entry<String, Integer> addNewUser (
             @RequestParam String name,
             @RequestParam String email,
             @RequestParam String password) {
+        var users = userRepository.findAll();
+        for (var user : users) {
+            if (user.getEmail().equals(email)) {
+                return user.getPerson();
+            }
+        }
         User newUser = new User();
         newUser.rename(name);
         newUser.setEmail(email);
         newUser.setPassword(password);
         newUser.createListTests();
         userRepository.save(newUser);
-        return SUCCESS_SAVE;
+        return newUser.getPerson();
     }
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping(path="/addNewTest")
     public @ResponseBody String addNewTest(
             @RequestParam int userId,
@@ -56,7 +65,8 @@ public class MainController {
         return SUCCESS_SAVE;
     }
 
-    @PostMapping(path="/signInAccount")
+    @CrossOrigin(origins = "http://localhost:8080")
+    @GetMapping(path="/signInAccount")
     public @ResponseBody Map.Entry<String, Integer> signInAccount (
             @RequestParam String email,
             @RequestParam String password) {
@@ -69,6 +79,7 @@ public class MainController {
         return null;
     }
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping("/getUserTestsById")
     public @ResponseBody Iterable<Map.Entry<String, Integer>> getUserTests(@RequestParam int userId) {
         var user = userRepository.findById(userId);
@@ -82,11 +93,13 @@ public class MainController {
         return testList;
     }
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping("/getTestById")
     public @ResponseBody Test getTestById(@RequestParam int testId) {
         return testRepository.findById(testId).orElse(null);
     }
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @PutMapping(path="/updateTestById")
     public @ResponseBody String updateTestUser (
             @RequestParam int userId,
@@ -107,6 +120,7 @@ public class MainController {
         return SUCCESS_SAVE;
     }
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @PutMapping(path="/updateSecondAttemptTestById")
     public @ResponseBody String updateTestUser (
             @RequestParam int userId,
@@ -123,6 +137,7 @@ public class MainController {
         return SUCCESS_SAVE;
     }
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @PutMapping(path="/passTestByUser")
     public @ResponseBody String updateTestUser (
             @RequestParam int userId,
@@ -139,6 +154,7 @@ public class MainController {
         return SUCCESS_SAVE;
     }
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping("/getStatisticsTestId")
     public @ResponseBody Map<Map.Entry<String, Integer>, Integer> getTestStatistics(@RequestParam int testId) {
         var test = testRepository.findById(testId);
@@ -152,12 +168,14 @@ public class MainController {
         return statistics;
     }
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping("/getShortStatisticsTestId")
     public @ResponseBody ShortStatistic getTestShortStatistics(@RequestParam int testId) {
         var test = testRepository.findById(testId);
         return test.get().getShortStatistics();
     }
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @DeleteMapping("/deleteTestById")
     public @ResponseBody String deleteTest(
             @RequestParam int userId,
@@ -173,6 +191,7 @@ public class MainController {
         return SUCCESS_SAVE;
     }
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @DeleteMapping("/clearDB")
     public @ResponseBody String clearDB() {
         userRepository.deleteAll();
@@ -180,11 +199,13 @@ public class MainController {
         return SUCCESS_SAVE;
     }
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping(path="/getAllUsers")
     public @ResponseBody Iterable<User> getAllUsers() {
         return userRepository.findAll();
     }
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping(path="/getAllTests")
     public @ResponseBody Iterable<Test> getAllTests() {
         return testRepository.findAll();
